@@ -42,8 +42,8 @@ class ByteCodeQuality implements Plugin {
                     "class"(location: sourceSets.main.classes.asPath)
                 }
             }
-            
-            println(result)
-        }   
+        }
+        
+        project.build.dependsOn 'findbugs'
     }
 }

@@ -20,7 +20,6 @@ class Cobertura implements Plugin {
         project.dependencies {
             coberturaConf "net.sourceforge.cobertura:cobertura:$version"
             testRuntime "net.sourceforge.cobertura:cobertura:$version"
-            testCompile 'junit:junit:4.5'
         }
 
         project.test.doFirst  {            
@@ -55,7 +54,6 @@ class Cobertura implements Plugin {
                 ant.move(file: srcCopy,
                          tofile: srcOriginal)
                 // create cobertura reports
-                println("doing cobertura reports")
                 ant.'cobertura-report'(destdir:"$project.buildDir/reports/test-coverage",
                      format:'html', srcdir:"src/main/java", datafile:cobSerFile)
             }
