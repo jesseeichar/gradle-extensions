@@ -3,10 +3,10 @@ package com.camptocamp.gradle;
 import org.gradle.api.*;
 import org.gradle.api.plugins.*;
 
-class ByteCodeQuality implements Plugin {  
+class ByteCodeQuality implements Plugin<Project> {  
     String version = "1.3.9"
   
-    def void use(Project project, org.gradle.api.plugins.ProjectPluginsContainer container) {
+    def void use(Project project) {
         project.configurations {
             findbugsConf
         }
