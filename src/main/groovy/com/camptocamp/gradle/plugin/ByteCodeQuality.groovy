@@ -1,4 +1,4 @@
-package com.camptocamp.gradle;
+package com.camptocamp.gradle.plugin;
 
 import org.gradle.api.*;
 import org.gradle.api.plugins.*;
