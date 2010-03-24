@@ -25,6 +25,28 @@ class Camptocamp implements Plugin<Project> {
         filtering.description = "copies all the files that need to have strings updated from the "+
                                 "filter files to the build dir for inclusion into the webapp"
         
+        filtering.from "src/main/filtered-resources"
+        filtering.from "src/main/filtered-webapp"
+        filtering.into "$project.buildDir/filtered"
+        
+        project.ant.delete(dir: "$project.buildDir/filtered")
+        
+        def server = System.getProperty("server") ?: "local"
+        
+        project.fileTree {
+            from 'filters'
+            include "$server/*.filter"
+        }.each {
+            filtering.filterFile(it)
+        }
+        
+        def global = project.file("filters/global-resource.filter") 
+        if (global.exists()) {
+            filtering.filterFile(global)
+        } else {
+            project.logger.warn("$global does not exist. Verify this is not an error")
+        }
+        
     }
     
     def configureWarProjectLayout(Project project) {
