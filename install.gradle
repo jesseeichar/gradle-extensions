@@ -1,15 +1,16 @@
 task install << {
-    build = new File("build.gradle")
-    
-    build.append(
-"""
-apply type: com.camptocamp.gradle.plugin.Camptocamp
-""")
-
     ant.exec(executable: 'git', failonerror: true) {
         arg(value: 'submodule')
         arg(value: 'add')
-        arg(value: 'url')
+        arg(value: 'git@github.com:jesseeichar/gradle-extensions.git')
         arg(value: 'buildSrc')
     }
+
+build = new File("build.gradle")
+
+build.append(
+"""
+// Added by install gradle script
+apply type: com.camptocamp.gradle.plugin.Camptocamp
+""")
 }
