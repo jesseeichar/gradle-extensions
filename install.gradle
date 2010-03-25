@@ -1,0 +1,8 @@
+task install << {
+    ant.exec(executable: 'git', failonerror: true) {
+        arg(value: 'submodule')
+        arg(value: 'add')
+        arg(value: url)
+        arg(value: "$dir")
+    }
+}
