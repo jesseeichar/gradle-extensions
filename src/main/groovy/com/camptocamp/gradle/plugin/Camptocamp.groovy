@@ -5,31 +5,26 @@ import org.gradle.api.plugins.*;
 import com.camptocamp.gradle.task.*
 
 class Camptocamp implements Plugin<Project> {  
-    
-    final String FILTER_RESOURCES_NAME = "filterResources"
-    final String FILTER_RESOURCES_IN = "src/main/filtered-resources"
-    final String FILTER_RESOURCES_OUT = "classes/main/"
-
-    final String FILTER_WEBAPP_NAME = "filterWebapp"
-    final String FILTER_WEBAPP_IN = "src/main/filtered-webapp"
-    final String FILTER_WEBAPP_OUT = "filtered/webapp"
+    final String FILTER_RESOURCES_TASKNAME = "filterResources"
+    final String FILTER_WEBAPP_TASKNAME = "filterWebapp"
     
     def void use(Project project) {
-        project.convention.plugins.camptocamp = new CamptocampConvention()
+        def convention = new CamptocampConvention(project)
+        project.convention.plugins.camptocamp = convention
+
+        configureFiltering(project, FILTER_RESOURCES_TASKNAME, convention.filterResourcesIn, convention.filterResourcesOut)
+        configureFiltering(project, FILTER_WEBAPP_TASKNAME, convention.filterWebappIn, convention.filterWebappOut)
+        configureWarPlugins(project, convention)
 
         configureProjectLayout(project)
-
-        configureFiltering(project, FILTER_RESOURCES_NAME, FILTER_RESOURCES_IN, FILTER_RESOURCES_OUT)
-        configureFiltering(project, FILTER_WEBAPP_NAME, FILTER_WEBAPP_IN, FILTER_WEBAPP_OUT)
-
         configureWarProjectLayout(project)
         configureAddSecurityProxy(project)
-        configureWarPlugins(project)
     }
 
-    def configureWarPlugins(Project project) {
-         project.tasks.withType(org.gradle.api.tasks.bundling.War.class).allTasks {
-             task.from pluginConvention.getWebAppDir();
+    def configureWarPlugins(Project project, CamptocampConvention convention) {
+         project.tasks.withType(org.gradle.api.tasks.bundling.War.class).allTasks { task ->
+             task.dependsOn project.tasks.getByName(FILTER_WEBAPP_TASKNAME)
+             task.from convention.filterWebappOut
          }
     }
     
@@ -39,14 +34,14 @@ class Camptocamp implements Plugin<Project> {
     }
     
     def configureFiltering(Project project, String name, String input, String output) {
-        Filtering filtering = project.tasks.add("$project.buildDir/$name", Filtering.class)
+        Filtering filtering = project.tasks.add(name, Filtering.class)
         filtering.description = "copies all the files that need to have strings updated from the "+
                                 "filter files to the build dir for inclusion into the webapp"
         
         filtering.from input
         filtering.into output
         
-        project.ant.delete(dir: "$project.buildDir/filtered")
+        project.ant.delete(dir: output)
         
         if(System.getProperty("server") == null) {
             project.logger.info("system property 'server' is not defined so defaulting to 'local'")
