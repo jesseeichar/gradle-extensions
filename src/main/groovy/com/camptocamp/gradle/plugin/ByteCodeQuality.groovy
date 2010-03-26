@@ -6,7 +6,7 @@ import org.gradle.api.plugins.*;
 class ByteCodeQuality implements Plugin<Project> {  
     String version = "1.3.9"
   
-    def void use(Project project) {
+    def void apply(Project project) {
         project.configurations {
             findbugsConf
         }

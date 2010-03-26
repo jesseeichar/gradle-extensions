@@ -8,7 +8,7 @@ class Camptocamp implements Plugin<Project> {
     final String FILTER_RESOURCES_TASKNAME = "filterResources"
     final String FILTER_WEBAPP_TASKNAME = "filterWebapp"
     
-    def void use(Project project) {
+    def void apply(Project project) {
         def convention = new CamptocampConvention(project)
         project.convention.plugins.camptocamp = convention
 

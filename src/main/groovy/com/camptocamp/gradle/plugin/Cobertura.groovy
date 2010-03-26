@@ -4,7 +4,7 @@ import org.gradle.api.*;
 
 class Cobertura implements Plugin<Project> {  
 
-    def void use(Project project) {
+    def void apply(Project project) {
         def cobSerFile="${project.buildDir}/cobertura.ser"
         def srcOriginal="${project.sourceSets.main.classesDir}"
         def srcCopy="${srcOriginal}-copy"
