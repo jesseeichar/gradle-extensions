@@ -22,8 +22,8 @@ class ProjectLayout extends DefaultTask {
         srcJava: {"$baseDir/$baseDir/src/main/java"},
         srcResources: {"$baseDir/src/main/resources"},
         testJava: {"$baseDir/src/test/java"},
-        filteredResource: {"$baseDir/src/main/filtered-resources"},
-        filteredWebapp: {"$baseDir/src/main/filtered-webapp"},
+        filteredResource: {"$baseDir/src/main/filter-resources"},
+        filteredWebapp: {"$baseDir/src/main/filter-webapp"},
         testResources: {"$baseDir/src/test/resources"}
     ]
     
