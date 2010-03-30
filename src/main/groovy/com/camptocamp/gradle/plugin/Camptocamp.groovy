@@ -12,13 +12,30 @@ class Camptocamp implements Plugin<Project> {
         def convention = new CamptocampConvention(project)
         project.convention.plugins.camptocamp = convention
 
+
         configureFiltering(project, FILTER_RESOURCES_TASKNAME, convention.filterResourcesIn, convention.filterResourcesOut)
         configureFiltering(project, FILTER_WEBAPP_TASKNAME, convention.filterWebappIn, convention.filterWebappOut)
-        configureWarPlugins(project, convention)
 
         configureProjectLayout(project)
         configureWarProjectLayout(project)
         configureAddSecurityProxy(project)
+
+        project.afterEvaluate {
+            configureWarPlugins(project, convention)        
+            configureJettyRunAll(project)
+        }
+    }
+
+    def configureJettyRunAll(Project project) {
+
+        if(project.getTasksByName("war",false).isEmpty())  return ;
+        
+        project.tasks.addRule("Pattern: $JettyRunAllWar.TASK_NAME") { taskName -> 
+            if (taskName == JettyRunAllWar.TASK_NAME) {
+                def allTasks = project.tasks
+                    allTasks.add(taskName, JettyRunAllWar.class)
+            }
+        }
     }
 
     def configureWarPlugins(Project project, CamptocampConvention convention) {
@@ -29,7 +46,7 @@ class Camptocamp implements Plugin<Project> {
     }
     
     def configureProjectLayout(Project project) {
-        ProjectLayout layout = project.tasks.add("layout", ProjectLayout.class)
+        ProjectLayout layout = project.tasks.add(ProjectLayout.TASK_NAME, ProjectLayout.class)
         layout.description = "Adds files for a default Camptocamp application configuration"
     }
     
@@ -69,8 +86,7 @@ class Camptocamp implements Plugin<Project> {
     }
     
     def configureAddSecurityProxy(Project project) {
-        ProjectLayout proxy = project.tasks.add("addSecurityProxy", AddSecurityProxy.class)
-        proxy.description = "adds the proxy submodules to a proxy directory"
-        
+        ProjectLayout proxy = project.tasks.add(AddSecurityProxy.TASK_NAME, AddSecurityProxy.class)
+        proxy.description = "adds the proxy submodules to a proxy directory"            
     }
 }

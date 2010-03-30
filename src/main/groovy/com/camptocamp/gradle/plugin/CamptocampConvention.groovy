@@ -10,10 +10,10 @@ class CamptocampConvention {
     String filterWebappOut
 
     def  CamptocampConvention(Project project) {
-        filterResourcesIn = project.file("src/main/filtered-resources")
+        filterResourcesIn = project.file("src/main/filter-resources")
         filterResourcesOut = project.file("$project.buildDir/classes/main/")
 
-        filterWebappIn = project.file("src/main/filtered-webapp")
+        filterWebappIn = project.file("src/main/filter-webapp")
         filterWebappOut = project.file("$project.buildDir/filtered/webapp")
     }
 }
