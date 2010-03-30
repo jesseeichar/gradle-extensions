@@ -21,7 +21,7 @@ class AddSecurityProxy extends ProjectLayout {
         settingsFile.append("\ninclude ':$proxyDir', ':$proxyDir:cas', ':$proxyDir:config', ':$proxyDir:core'")
 
         gitSubmoduleAddProxy()
-       // gitCloneConfig()
+       gitCloneConfig()
         
         super.basicLayout()
     }
