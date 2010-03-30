@@ -28,7 +28,7 @@ class AddSecurityProxy extends ProjectLayout {
     
     def gitSubmoduleAddProxy() {
         def url = 'git@github.com:jesseeichar/security-proxy.git'
-        url = "/Users/jeichar/Local_Projects/security-proxy"
+//        url = "/Users/jeichar/Local_Projects/security-proxy"
         project.logger.quiet("cloning project: $url")
         
         project.ant.exec(executable: 'git', failonerror: true, logError: true) {
