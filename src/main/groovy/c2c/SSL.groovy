@@ -1,4 +1,4 @@
-package com.camptocamp.gradle;
+package c2c;
 
 class SSL {
   private def mPrivateKey = System.env['privateKey'] ?: System.properties['privateKey']

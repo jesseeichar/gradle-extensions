@@ -1,8 +1,8 @@
-package com.camptocamp.gradle.plugin;
+package c2c.convention;
 
 import org.gradle.api.Project;
 
-class CamptocampConvention {
+class Camptocamp {
     String filterResourcesIn
     String filterResourcesOut
 

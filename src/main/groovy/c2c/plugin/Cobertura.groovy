@@ -1,4 +1,5 @@
-package com.camptocamp.gradle.plugin;
+// Runs cobertura to analyze the code coverage of the project.  This is a ALPHA version
+package c2c.plugin;
 
 import org.gradle.api.*;
 

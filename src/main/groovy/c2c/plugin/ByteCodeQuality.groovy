@@ -1,4 +1,5 @@
-package com.camptocamp.gradle.plugin;
+// Collection of quality assurance plugins that analyzes bytecode.  Only FindBugs at the moment
+package c2c.plugin;
 
 import org.gradle.api.*;
 import org.gradle.api.plugins.*;

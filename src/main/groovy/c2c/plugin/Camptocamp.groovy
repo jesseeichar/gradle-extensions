@@ -1,15 +1,16 @@
-package com.camptocamp.gradle.plugin;
+// A standard set of plugins for a camptocamp project containing code (not a parent project)
+package c2c.plugin;
 
 import org.gradle.api.*;
 import org.gradle.api.plugins.*;
-import com.camptocamp.gradle.task.*
+import c2c.task.*
 
 class Camptocamp implements Plugin<Project> {  
     final String FILTER_RESOURCES_TASKNAME = "filterResources"
     final String FILTER_WEBAPP_TASKNAME = "filterWebapp"
     
     def void apply(Project project) {
-        def convention = new CamptocampConvention(project)
+        def convention = new c2c.convention.Camptocamp(project)
         project.convention.plugins.camptocamp = convention
 
         configureFiltering(project, FILTER_RESOURCES_TASKNAME, convention.filterResourcesIn, convention.filterResourcesOut)
@@ -21,7 +22,7 @@ class Camptocamp implements Plugin<Project> {
         configureAddSecurityProxy(project)
     }
 
-    def configureWarPlugins(Project project, CamptocampConvention convention) {
+    def configureWarPlugins(Project project, c2c.convention.Camptocamp convention) {
          project.tasks.withType(org.gradle.api.tasks.bundling.War.class).allTasks { task ->
              task.dependsOn project.tasks.getByName(FILTER_WEBAPP_TASKNAME)
              task.from convention.filterWebappOut
