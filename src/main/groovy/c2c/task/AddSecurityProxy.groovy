@@ -7,6 +7,7 @@ class AddSecurityProxy extends ProjectLayout {
     {
         description = "adds the proxy submodules in a proxy sub-directory of the current project"
     }
+    public static final def TASK_NAME = "addSecurityProxy"
     
     def proxyDir = System.getProperty('proxyDir') ?: 'security-proxy'
     
@@ -18,24 +19,41 @@ class AddSecurityProxy extends ProjectLayout {
     }
 
     def basicLayout() {
-        
-        new File(proxyDir).mkdirs()
 
         def settingsFile = new File("$project.projectDir/settings.gradle")
-        settingsFile.append(settings)
+        settingsFile.append("\ninclude ':$proxyDir', ':$proxyDir:cas', ':$proxyDir:config', ':$proxyDir:core'")
 
+        gitSubmoduleAddProxy()
+       gitCloneConfig()
         
+        super.basicLayout()
+    }
+    
+    def gitSubmoduleAddProxy() {
         def url = 'git@github.com:jesseeichar/security-proxy.git'
-        url = "/Users/jeichar/Local_Projects/security-proxy"
+//        url = "/Users/jeichar/Local_Projects/security-proxy"
         project.logger.quiet("cloning project: $url")
-        project.ant.exec(executable: 'git', failonerror: true) {
+        
+        project.ant.exec(executable: 'git', failonerror: true, logError: true) {
             arg(value: 'clone')
+            arg(value: '--recursive')
             arg(value: url)
             arg(value: "$proxyDir")
         }
-        project.ant.delete(dir: "$proxyDir/proxy/config/.git")                
-        project.ant.delete(dir: "$proxyDir/.git")                
+    }
+    
+    def gitCloneConfig() {
+        def url = 'git@github.com:jesseeichar/proxy-config.git'
+ //       url = "/Users/jeichar/Local_Projects/security-proxy/config"
+        project.logger.quiet("cloning project: $url")
+        project.ant.exec(executable: 'git', failonerror: true, logError: true) {
+            arg(value: 'clone')
+            arg(value: url)
+            arg(value: "$proxyDir/config")
+        }
         
-        super.basicLayout()
+        
+        project.ant.delete(dir: "$proxyDir/config/.git", failonerror: true)                
+
     }
 }

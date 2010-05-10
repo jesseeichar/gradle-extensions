@@ -19,11 +19,27 @@ class Camptocamp implements Plugin<Project> {
         def convention = new c2c.convention.Camptocamp(project)
         project.convention.plugins.camptocamp = convention
 
+
         configureFiltering(project, FILTER_RESOURCES_TASKNAME, convention.filterResourcesIn, convention.filterResourcesOut)
         configureFiltering(project, FILTER_WEBAPP_TASKNAME, convention.filterWebappIn, convention.filterWebappOut)
-        configureWarPlugins(project, convention)
 
         addDefaultTasks(project)
+        project.afterEvaluate {
+            configureWarPlugins(project, convention)        
+            configureJettyRunAll(project)
+        }
+    }
+
+    def configureJettyRunAll(Project project) {
+
+        if(project.getTasksByName("war",false).isEmpty())  return ;
+        
+        project.tasks.addRule("Pattern: $JettyRunAllWar.TASK_NAME") { taskName -> 
+            if (taskName == JettyRunAllWar.TASK_NAME) {
+                def allTasks = project.tasks
+                    allTasks.add(taskName, JettyRunAllWar.class)
+            }
+        }
     }
 
     def configureWarPlugins(Project project, c2c.convention.Camptocamp convention) {

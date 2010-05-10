@@ -8,6 +8,8 @@ class ProjectLayout extends DefaultTask {
         description = "Adds files for a default Camptocamp application configuration"
     }
     
+    public static final def TASK_NAME = "layout"
+    
     def projectName = "$project.name"
     def baseDir = "."
     def devHost = "$projectName-dev.int.lsn.camptocamp.com"
