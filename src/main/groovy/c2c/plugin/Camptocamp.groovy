@@ -9,7 +9,13 @@ class Camptocamp implements Plugin<Project> {
     final String FILTER_RESOURCES_TASKNAME = "filterResources"
     final String FILTER_WEBAPP_TASKNAME = "filterWebapp"
     
-    def void apply(Project project) {
+    public void apply(Project project) {
+        def env = System.getenv()
+        
+        def localRepo = env['MAVEN_REPO'] ?: env['HOME']+'/.m2/repository'
+        project.repositories.mavenRepo (name: 'localm2', urls: "file://${localRepo}")
+        
+        
         def convention = new c2c.convention.Camptocamp(project)
         project.convention.plugins.camptocamp = convention
 
@@ -17,9 +23,7 @@ class Camptocamp implements Plugin<Project> {
         configureFiltering(project, FILTER_WEBAPP_TASKNAME, convention.filterWebappIn, convention.filterWebappOut)
         configureWarPlugins(project, convention)
 
-        configureProjectLayout(project)
-        configureWarProjectLayout(project)
-        configureAddSecurityProxy(project)
+        addDefaultTasks(project)
     }
 
     def configureWarPlugins(Project project, c2c.convention.Camptocamp convention) {
@@ -29,9 +33,12 @@ class Camptocamp implements Plugin<Project> {
          }
     }
     
-    def configureProjectLayout(Project project) {
-        ProjectLayout layout = project.tasks.add("layout", ProjectLayout.class)
-        layout.description = "Adds files for a default Camptocamp application configuration"
+    def addDefaultTasks(Project project) {
+        project.tasks.add("layout", ProjectLayout.class)
+        project.tasks.add("listPlugins", ListPlugins.class)
+        project.tasks.add("addSecurityProxy", AddSecurityProxy.class)
+        
+        // TODO WAR plugin
     }
     
     def configureFiltering(Project project, String name, String input, String output) {
@@ -62,16 +69,6 @@ class Camptocamp implements Plugin<Project> {
         } else {
             project.logger.info("$global does not exist. Verify this is not an error")
         }
-        
-    }
-    
-    def configureWarProjectLayout(Project project) {
-        
-    }
-    
-    def configureAddSecurityProxy(Project project) {
-        ProjectLayout proxy = project.tasks.add("addSecurityProxy", AddSecurityProxy.class)
-        proxy.description = "adds the proxy submodules to a proxy directory"
         
     }
 }

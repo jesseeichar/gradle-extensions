@@ -4,6 +4,9 @@ import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.TaskAction;
 
 class AddSecurityProxy extends ProjectLayout {
+    {
+        description = "adds the proxy submodules in a proxy sub-directory of the current project"
+    }
     
     def proxyDir = System.getProperty('proxyDir') ?: 'security-proxy'
     

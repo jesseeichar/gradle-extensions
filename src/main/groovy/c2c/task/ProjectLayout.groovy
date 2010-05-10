@@ -4,6 +4,10 @@ import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.TaskAction;
 
 class ProjectLayout extends DefaultTask { 
+    {
+        description = "Adds files for a default Camptocamp application configuration"
+    }
+    
     def projectName = "$project.name"
     def baseDir = "."
     def devHost = "$projectName-dev.int.lsn.camptocamp.com"
@@ -33,7 +37,7 @@ class ProjectLayout extends DefaultTask {
 public_host=$publicHost
 """
     }
-    
+       
     @TaskAction
     def basicLayout() { 
        filterFiles.each { path ->

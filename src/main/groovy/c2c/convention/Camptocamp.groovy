@@ -1,6 +1,6 @@
 package c2c.convention;
 
-import org.gradle.api.Project;
+import org.gradle.api.*;
 
 class Camptocamp {
     String filterResourcesIn
@@ -9,7 +9,7 @@ class Camptocamp {
     String filterWebappIn
     String filterWebappOut
 
-    def  CamptocampConvention(Project project) {
+    public Camptocamp(Project project) {
         filterResourcesIn = project.file("src/main/filtered-resources")
         filterResourcesOut = project.file("$project.buildDir/classes/main/")
 
