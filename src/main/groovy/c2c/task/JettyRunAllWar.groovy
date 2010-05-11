@@ -1,4 +1,4 @@
-package com.camptocamp.gradle.task;
+package c2c.task;
 
 import org.apache.tools.ant.filters.ReplaceTokens
 

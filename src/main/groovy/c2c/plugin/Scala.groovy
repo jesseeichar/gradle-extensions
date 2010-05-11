@@ -4,7 +4,7 @@ package c2c.plugin
 import org.gradle.api.*
 
 class Scala implements Plugin<Project> {
-    def scalaVersion = '2.8.0.RC1'
+    def scalaVersion = '2.8.0.RC2'
 //    List<String> scalaTestLibs = []
     String scalaLibrary() {return "org.scala-lang:scala-library:$scalaVersion"}
     String scalaCompiler() {return "org.scala-lang:scala-compiler:$scalaVersion"}
