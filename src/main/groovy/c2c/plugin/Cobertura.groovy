@@ -2,6 +2,7 @@
 package c2c.plugin;
 
 import org.gradle.api.*;
+import org.gradle.api.tasks.testing.Test;
 
 class Cobertura implements Plugin<Project> {  
 
@@ -21,8 +22,14 @@ class Cobertura implements Plugin<Project> {
             coberturaConf "net.sourceforge.cobertura:cobertura:$version"
             testRuntime "net.sourceforge.cobertura:cobertura:$version"
         }
+        project.tasks.add(name:"coverage", type: Test) {
+            systemProperties['net.sourceforge.cobertura.datafile']="${cobSerFile}"
+            testClassesDir = project.test.testClassesDir
+            classpath = project.test.classpath
+            testSrcDirs = project.test.testSrcDirs
+        }
 
-        project.test.doFirst  {            
+        project.coverage.doFirst  {            
             // delete data file for cobertura, otherwise coverage would be added
             ant.delete(file:cobSerFile, failonerror:false)
             // delete copy of original classes
@@ -43,11 +50,8 @@ class Cobertura implements Plugin<Project> {
             
         }
 
-        project.test {
-            options.systemProperties['net.sourceforge.cobertura.datafile']="${cobSerFile}"
-        }
 
-        project.test.doLast {
+        project.coverage.doLast {
             if (new File(srcCopy).exists()) {
                 // replace instrumented classes with backup copy again
                 ant.delete(file: srcOriginal)
@@ -55,7 +59,11 @@ class Cobertura implements Plugin<Project> {
                          tofile: srcOriginal)
                 // create cobertura reports
                 ant.'cobertura-report'(destdir:"$project.buildDir/reports/test-coverage",
-                     format:'html', srcdir:"src/main/java", datafile:cobSerFile)
+                     format:'html', datafile:cobSerFile) {
+                         if( new File("src/main/java").exists()) fileset(dir: "src/main/java")
+                         if( new File("src/main/scala").exists()) fileset(dir: "src/main/scala")
+                         if( new File("src/main/groovy").exists()) fileset(dir: "src/main/groovy")
+                     }
             }
         }
     }
